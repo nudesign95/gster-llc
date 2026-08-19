@@ -123,7 +123,7 @@ export default function HomePage() {
             style={{ transitionProperty: "opacity, transform", transitionDuration: "1.5s" }}
           >
             {/* Gradiente optimizado con clase canónica */}
-            <div className="absolute inset-0 bg-linear-to-r from-[#04080a]/80 via-[#04080a]/40 to-transparent z-10" />
+            <div className="absolute inset-0 bg-linear-to-r from-[#04080a]/75 via-[#04080a]/35 to-transparent z-10" />
             <img
               src={slide}
               alt={`GSTER Panorama ${index + 1}`}
@@ -132,8 +132,9 @@ export default function HomePage() {
           </div>
         ))}
 
-        <div className="relative z-20 max-w-7xl mx-auto px-6 sm:px-12 w-full">
-          <div className="max-w-3xl space-y-8 lg:pl-4">
+        {/* Contenedor desplazado hacia la izquierda[cite: 2] */}
+        <div className="relative z-20 w-full px-6 sm:px-12 lg:px-16">
+          <div className="max-w-3xl space-y-8">
             
             <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-white tracking-tight uppercase leading-[1.08]">
               {t.heroTitle1} <br />
