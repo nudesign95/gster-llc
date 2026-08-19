@@ -10,7 +10,7 @@ import {
   FileSpreadsheet, LogOut, Phone, Mail, MapPin, ChevronDown, Camera, 
   Check, Ban, Eye, EyeOff, ShieldCheck, Globe, AlertCircle, CalendarClock, FileText, Download 
 } from "lucide-react";
-
+export const dynamic = 'force-dynamic';
 const translations = {
   es: {
     title: "GSTER LLC — Panel Administrativo",
