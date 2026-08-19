@@ -115,51 +115,51 @@ export default function ContactoPage() {
                   <CheckCircle2 className="w-10 h-10 animate-bounce" />
                 </div>
                 <h3 className="text-xl font-bold uppercase tracking-wide text-gster-verde">{currentText.successTitle}</h3>
-                <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                <p className="text-sm text-slate-500 max-w-sm mx-auto">
                   {currentText.successDesc}
                 </p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <h3 className="text-lg font-bold uppercase tracking-wider text-gster-verde mb-1">{currentText.formTitle}</h3>
+                  <h3 className="text-base font-bold uppercase tracking-wider text-gster-verde mb-1">{currentText.formTitle}</h3>
                   <p className="text-xs text-slate-400">{currentText.formSub}</p>
                 </div>
 
-                <div className="space-y-4 text-xs">
+                <div className="space-y-5">
                   <div>
-                    <label className="block text-[10px] uppercase tracking-wider text-gster-verde font-bold mb-1.5">{currentText.nameLabel}</label>
+                    <label className="block text-xs uppercase tracking-wider text-gster-verde font-bold mb-2">{currentText.nameLabel}</label>
                     <input 
                       type="text" 
                       required
                       placeholder="Ej. Juan Pérez"
                       value={formData.nombre}
                       onChange={(e) => setFormData({...formData, nombre: e.target.value})}
-                      className="w-full px-4 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-gster-verde placeholder-slate-300 focus:outline-none focus:border-gster-verde focus:ring-1 focus:ring-gster-verde transition-all"
+                      className="w-full px-4 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm text-gster-verde placeholder-slate-400 focus:outline-none focus:border-gster-verde focus:ring-1 focus:ring-gster-verde transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[10px] uppercase tracking-wider text-gster-verde font-bold mb-1.5">{currentText.emailLabel}</label>
+                    <label className="block text-xs uppercase tracking-wider text-gster-verde font-bold mb-2">{currentText.emailLabel}</label>
                     <input 
                       type="email" 
                       required
                       placeholder="correo@gsterllc.com"
                       value={formData.email}
                       onChange={(e) => setFormData({...formData, email: e.target.value})}
-                      className="w-full px-4 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-gster-verde placeholder-slate-300 focus:outline-none focus:border-gster-verde focus:ring-1 focus:ring-gster-verde transition-all"
+                      className="w-full px-4 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm text-gster-verde placeholder-slate-400 focus:outline-none focus:border-gster-verde focus:ring-1 focus:ring-gster-verde transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[10px] uppercase tracking-wider text-gster-verde font-bold mb-1.5">{currentText.msgLabel}</label>
+                    <label className="block text-xs uppercase tracking-wider text-gster-verde font-bold mb-2">{currentText.msgLabel}</label>
                     <textarea 
                       rows={4}
                       required
                       placeholder="..."
                       value={formData.mensaje}
                       onChange={(e) => setFormData({...formData, mensaje: e.target.value})}
-                      className="w-full px-4 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-gster-verde placeholder-slate-300 focus:outline-none focus:border-gster-verde focus:ring-1 focus:ring-gster-verde transition-all resize-none"
+                      className="w-full px-4 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm text-gster-verde placeholder-slate-400 focus:outline-none focus:border-gster-verde focus:ring-1 focus:ring-gster-verde transition-all resize-none"
                     />
                   </div>
                 </div>
