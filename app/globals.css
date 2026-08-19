@@ -26,7 +26,7 @@ img {
   -khtml-user-drag: none;
   -moz-user-drag: none;
   -o-user-drag: none;
-  user-drag: none;
+  -webkit-user-drag: none;
 }
 
 /* 🔓 EXCEPCIÓN: Habilitar selección y copia completa dentro del Dashboard e inputs */
