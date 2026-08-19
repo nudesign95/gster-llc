@@ -31,7 +31,7 @@ export default function Footer() {
         { name: "Privacidad", href: "/legal/privacidad" },
         { name: "Términos y Condiciones", href: "/legal/terminos-y-condiciones" },
       ],
-      rights: "Todos los derechos reservados. Compromiso, solvencia y desarrollo.",
+      rights: "Pagina creado y diseñado por Garic Edume",
     },
     EN: {
       motto: "Building the foundations of a new economic and professional horizon through genuine and structured opportunities.",
@@ -88,7 +88,7 @@ export default function Footer() {
   alt="GSTER LLC"
   draggable={false}
   onContextMenu={(e) => e.preventDefault()}
-  className="h-11 w-auto object-contain pointer-events-none select-none"
+  className="h-12 w-auto object-contain pointer-events-none select-none"
 />
             <p className="text-xs sm:text-sm text-slate-400 leading-relaxed max-w-sm">
               {t.motto}
