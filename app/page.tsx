@@ -122,17 +122,18 @@ export default function HomePage() {
             }`}
             style={{ transitionProperty: "opacity, transform", transitionDuration: "1.5s" }}
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-[#04080a] via-[#04080a]/80 to-transparent z-10" />
+            {/* Gradiente optimizado con clase canónica */}
+            <div className="absolute inset-0 bg-linear-to-r from-[#04080a]/80 via-[#04080a]/40 to-transparent z-10" />
             <img
               src={slide}
               alt={`GSTER Panorama ${index + 1}`}
-              className="w-full h-full object-cover object-center filter brightness-90"
+              className="w-full h-full object-cover object-center filter brightness-95"
             />
           </div>
         ))}
 
         <div className="relative z-20 max-w-7xl mx-auto px-6 sm:px-12 w-full">
-          <div className="max-w-3xl space-y-8">
+          <div className="max-w-3xl space-y-8 lg:pl-4">
             
             <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-white tracking-tight uppercase leading-[1.08]">
               {t.heroTitle1} <br />
@@ -186,7 +187,7 @@ export default function HomePage() {
       <section className="max-w-7xl mx-auto px-6 sm:px-12 py-24 sm:py-32 space-y-16">
         
         {/* FRANJA 1: FINANZAS */}
-        <div className="relative bg-gradient-to-r from-[#06181d] via-[#0b2930] to-[#06181d] text-white rounded-[3rem] p-10 sm:p-16 overflow-hidden shadow-2xl border border-white/10 group">
+        <div className="relative bg-linear-to-r from-[#06181d] via-[#0b2930] to-[#06181d] text-white rounded-[3rem] p-10 sm:p-16 overflow-hidden shadow-2xl border border-white/10 group">
           <div className="absolute -top-24 -right-24 w-96 h-96 bg-amber-400/10 rounded-full blur-[120px] pointer-events-none group-hover:scale-125 transition-transform duration-700" />
           
           <div className="relative z-10 grid lg:grid-cols-12 gap-12 items-center">
@@ -213,7 +214,7 @@ export default function HomePage() {
 
             {/* PREVIEW EJECUTIVO */}
             <div className="lg:col-span-5 flex justify-center">
-              <div className="w-full max-w-md bg-white/[0.04] backdrop-blur-2xl border border-white/15 rounded-3xl p-8 shadow-2xl space-y-6">
+              <div className="w-full max-w-md bg-white/4 backdrop-blur-2xl border border-white/15 rounded-3xl p-8 shadow-2xl space-y-6">
                 <div className="flex items-center justify-between border-b border-white/10 pb-4">
                   <div className="flex items-center gap-3.5">
                     <div className="w-11 h-11 rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center font-black">
@@ -242,14 +243,14 @@ export default function HomePage() {
         </div>
 
         {/* FRANJA 2: DISEÑO GRÁFICO (NUDESIGN AGENCY) */}
-        <div className="relative bg-gradient-to-r from-slate-950 via-[#0a1218] to-slate-950 text-white rounded-[3rem] p-10 sm:p-16 overflow-hidden shadow-2xl border border-white/10 group">
+        <div className="relative bg-linear-to-r from-slate-950 via-[#0a1218] to-slate-950 text-white rounded-[3rem] p-10 sm:p-16 overflow-hidden shadow-2xl border border-white/10 group">
           <div className="absolute -top-24 -left-24 w-96 h-96 bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none group-hover:scale-125 transition-transform duration-700" />
           
           <div className="relative z-10 grid lg:grid-cols-12 gap-12 items-center">
             
             {/* PREVIEW CREATIVO */}
             <div className="lg:col-span-5 flex justify-center order-2 lg:order-1">
-              <div className="w-full max-w-md bg-white/[0.04] backdrop-blur-2xl border border-white/15 rounded-3xl p-8 shadow-2xl space-y-6">
+              <div className="w-full max-w-md bg-white/4 backdrop-blur-2xl border border-white/15 rounded-3xl p-8 shadow-2xl space-y-6">
                 <div className="flex items-center justify-between border-b border-white/10 pb-4">
                   <div className="flex items-center gap-3.5">
                     <div className="w-11 h-11 rounded-2xl bg-white/5 border border-white/15 text-amber-400 flex items-center justify-center font-bold">
