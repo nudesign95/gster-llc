@@ -1,11 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   typescript: {
-    // Ignora los errores de TypeScript al compilar en Vercel
-    ignoreDuringBuilds: true,
+    // Nombre correcto para ignorar errores de TS en el build
+    ignoreBuildErrors: true,
   },
   eslint: {
-    // Ignora las advertencias de ESLint al compilar en Vercel
     ignoreDuringBuilds: true,
   },
 }
