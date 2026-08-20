@@ -138,6 +138,7 @@ export default function LoginPage() {
       </div>
 
       {/* 🌟 TARJETA DE LOGIN 🌟 */}
+      (Oculto de vistas públicas para proteger tu identidad)
       <div className="w-full max-w-md mx-auto my-auto py-8">
         <div className="bg-white/3 backdrop-blur-2xl border border-white/10 rounded-3xl p-8 sm:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.8)] space-y-8">
           
@@ -177,7 +178,7 @@ export default function LoginPage() {
                 <input
                   type="text"
                   required
-                  placeholder="Garic Edume / Solf Slice"
+                  placeholder="ej. administrador"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   className="w-full pl-4 pr-11 py-3.5 rounded-2xl bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 transition-colors text-sm font-medium"
