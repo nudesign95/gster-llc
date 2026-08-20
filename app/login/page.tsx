@@ -3,8 +3,21 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { Lock, User, ArrowLeft, Home, ShieldCheck, AlertCircle } from "lucide-react";
 import { useLanguage, Language } from "@/context/LanguageContext";
+
+type TranslationType = {
+  backTop: string;
+  portalTitle: string;
+  userInput: string;
+  passInput: string;
+  submitBtn: string;
+  loadingBtn: string;
+  errorText: string;
+  secureNotice: string;
+  backHomeBtn: string;
+};
 
 export default function LoginPage() {
   const router = useRouter();
@@ -15,17 +28,7 @@ export default function LoginPage() {
   const [errorMsg, setErrorMsg] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const t: Record<Language, {
-    backTop: string;
-    portalTitle: string;
-    userInput: string;
-    passInput: string;
-    submitBtn: string;
-    loadingBtn: string;
-    errorText: string;
-    secureNotice: string;
-    backHomeBtn: string;
-  }> = {
+  const content: Record<Language, TranslationType> = {
     ES: {
       backTop: "Inicio",
       portalTitle: "PORTAL ADMINISTRATIVO",
@@ -59,7 +62,9 @@ export default function LoginPage() {
       secureNotice: "Accès réservé exclusivement aux directeurs et au personnel habilité de GSTER LLC.",
       backHomeBtn: "Retour à la Page d'Accueil",
     }
-  }[lang];
+  };
+
+  const t = content[lang];
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,29 +73,18 @@ export default function LoginPage() {
 
     setTimeout(() => {
       const cleanUser = username.trim().toLowerCase();
-      const isGaric = cleanUser === "garic" || cleanUser === "garic edume" || cleanUser === "@garicedume";
-      const isSolf = cleanUser === "solf" || cleanUser === "solf slice" || cleanUser === "@solfslice";
+      const isAdmin = cleanUser === "admin";
 
-      if ((isGaric || isSolf) && password.length >= 4) {
-        const userData = isGaric
-          ? {
-              nombre: "Garic Edume",
-              cargo: "Co-Founder",
-              pais: "República Dominicana",
-              username: "@garicedume",
-              email: "garic@gsterllc.com",
-              foto: "/images/garic-avatar-02.jpg",
-              portada: "/images/garic-portada.jpg",
-            }
-          : {
-              nombre: "Solf Slice",
-              cargo: "Co-Founder",
-              pais: "República Dominicana",
-              username: "@solfslice",
-              email: "solf@gsterllc.com",
-              foto: "/images/slice-avatar-01.jpg",
-              portada: "/images/slice-portada.jpg",
-            };
+      if (isAdmin && password.length >= 4) {
+        const userData = {
+          nombre: "Administrador GSTER",
+          cargo: "System Administrator",
+          pais: "República Dominicana",
+          username: "@admin",
+          email: "admin@gsterllc.com",
+          foto: "/images/hero/hero-01.jpg",
+          portada: "/images/hero/hero-01.jpg",
+        };
 
         localStorage.setItem("gster_user", JSON.stringify(userData));
         document.cookie = "gster_auth_token=authorized_session; path=/; max-age=86400; SameSite=Strict";
@@ -134,18 +128,21 @@ export default function LoginPage() {
 
       {/* 🌟 TARJETA DE LOGIN 🌟 */}
       <div className="w-full max-w-md mx-auto my-auto py-8">
-        <div className="bg-white/[0.03] backdrop-blur-2xl border border-white/10 rounded-3xl p-8 sm:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.8)] space-y-8">
+        <div className="bg-white/3 backdrop-blur-2xl border border-white/10 rounded-3xl p-8 sm:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.8)] space-y-8">
           
           {/* LOGO OFICIAL + PORTAL ADMINISTRATIVO */}
           <div className="text-center space-y-3">
             <div className="flex justify-center">
-              <img
-  src="/assets/gster-logoblanco.svg"
-  alt="GSTER LLC"
-  draggable={false}
-  onContextMenu={(e) => e.preventDefault()}
-  className="h-12 w-auto object-contain pointer-events-none select-none"
-/>
+              <Image
+                src="/assets/gster-logoblanco.svg"
+                alt="GSTER LLC"
+                width={160}
+                height={48}
+                priority
+                draggable={false}
+                onContextMenu={(e) => e.preventDefault()}
+                className="h-12 w-auto object-contain pointer-events-none select-none"
+              />
             </div>
             <p className="text-[11px] uppercase tracking-[0.25em] font-black text-amber-400">
               {t.portalTitle}
@@ -169,7 +166,7 @@ export default function LoginPage() {
                 <input
                   type="text"
                   required
-                  placeholder="Garic Edume / Solf Slice"
+                  placeholder="admin"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   className="w-full pl-4 pr-11 py-3.5 rounded-2xl bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 transition-colors text-sm font-medium"
