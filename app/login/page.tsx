@@ -138,7 +138,7 @@ export default function LoginPage() {
       </div>
 
       {/* 🌟 TARJETA DE LOGIN 🌟 */}
-      (Oculto de vistas públicas para proteger tu identidad)
+    
       <div className="w-full max-w-md mx-auto my-auto py-8">
         <div className="bg-white/3 backdrop-blur-2xl border border-white/10 rounded-3xl p-8 sm:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.8)] space-y-8">
           
@@ -217,7 +217,7 @@ export default function LoginPage() {
           </form>
 
           {/* 🌟 BOTÓN DIRECTO PARA REGRESAR AL INICIO 🌟 */}
-          <div className="pt-2 border-t border-white/10 text-center">
+          <div className="pt-4 border-t border-white/14 text-center">
             <Link
               href="/"
               className="inline-flex items-center justify-center gap-2 w-full py-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-slate-300 hover:text-white uppercase tracking-wider transition-all cursor-pointer group"
