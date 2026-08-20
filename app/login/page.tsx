@@ -73,18 +73,29 @@ export default function LoginPage() {
 
     setTimeout(() => {
       const cleanUser = username.trim().toLowerCase();
-      const isAdmin = cleanUser === "admin";
+      const isGaric = cleanUser === "garic" || cleanUser === "garic edume" || cleanUser === "@garicedume";
+      const isSolf = cleanUser === "solf" || cleanUser === "solf slice" || cleanUser === "@solfslice";
 
-      if (isAdmin && password.length >= 4) {
-        const userData = {
-          nombre: "Administrador GSTER",
-          cargo: "System Administrator",
-          pais: "República Dominicana",
-          username: "@admin",
-          email: "admin@gsterllc.com",
-          foto: "/images/hero/hero-01.jpg",
-          portada: "/images/hero/hero-01.jpg",
-        };
+      if ((isGaric || isSolf) && password.length >= 4) {
+        const userData = isGaric
+          ? {
+              nombre: "Garic Edume",
+              cargo: "Co-Founder",
+              pais: "República Dominicana",
+              username: "@garicedume",
+              email: "garic@gsterllc.com",
+              foto: "/images/garic-avatar-02.jpg",
+              portada: "/images/garic-portada.jpg",
+            }
+          : {
+              nombre: "Solf Slice",
+              cargo: "Co-Founder",
+              pais: "República Dominicana",
+              username: "@solfslice",
+              email: "solf@gsterllc.com",
+              foto: "/images/slice-avatar-01.jpg",
+              portada: "/images/slice-portada.jpg",
+            };
 
         localStorage.setItem("gster_user", JSON.stringify(userData));
         document.cookie = "gster_auth_token=authorized_session; path=/; max-age=86400; SameSite=Strict";
@@ -166,7 +177,7 @@ export default function LoginPage() {
                 <input
                   type="text"
                   required
-                  placeholder="admin"
+                  placeholder="Garic Edume / Solf Slice"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   className="w-full pl-4 pr-11 py-3.5 rounded-2xl bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 transition-colors text-sm font-medium"
