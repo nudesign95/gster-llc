@@ -124,9 +124,10 @@ export default function FirmaClientePage() {
 
     setEnviando(true);
     try {
-      // 1. VALIDACIÓN INTELIGENTE CON LA API DE IA ANTES DE GUARDAR
+      // 1. VALIDACIÓN INTELIGENTE CON LA API DE IA (Envía el archivo y el nombre esperado del cliente)
       const aiFormData = new FormData();
       aiFormData.append("documento", archivoDoc);
+      aiFormData.append("clienteNombre", prestamo.cliente); // <-- AQUÍ VA EL NOMBRE DEL CLIENTE EN LA BD
 
       const aiResponse = await fetch("/api/verificar-documento", {
         method: "POST",
@@ -136,7 +137,7 @@ export default function FirmaClientePage() {
       const aiResult = await aiResponse.json();
 
       if (!aiResponse.ok || !aiResult.valido) {
-        throw new Error(aiResult.mensaje || "El sistema de IA ha rechazado el documento. Verifique que la foto sea clara y legible.");
+        throw new Error(aiResult.mensaje || "La IA ha rechazado el documento.");
       }
 
       // 2. Subir documento al bucket 'documentos' de Supabase[cite: 4]
@@ -264,7 +265,7 @@ export default function FirmaClientePage() {
                   onTouchStart={startDrawing}
                   onTouchEnd={stopDrawing}
                   onTouchMove={draw}
-                  className="w-full h-[180px] cursor-crosshair touch-none bg-white"
+                  className="w-full `h-45` cursor-crosshair touch-none bg-white"
                 />
               </div>
 
