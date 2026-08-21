@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import { CheckCircle2, ShieldCheck, Upload, Camera, FileText, RefreshCw } from "lucide-react";
+import { CheckCircle2, ShieldCheck, Camera, RefreshCw, AlertCircle } from "lucide-react";
 
 export default function FirmaClientePage() {
   const params = useParams();
@@ -15,7 +15,7 @@ export default function FirmaClientePage() {
   const [enviando, setEnviando] = useState(false);
   const [firmadoExitoso, setFirmadoExitoso] = useState(false);
 
-  // Referencia para el lienzo de firma
+  // Referencia para el lienzo de firma táctil / mouse
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
 
@@ -35,6 +35,11 @@ export default function FirmaClientePage() {
 
       if (error) throw error;
       setPrestamo(data);
+      
+      // CANDADO: Si ya está firmado previamente, bloqueamos el acceso de inmediato
+      if (data?.contrato_firmado || data?.estado === "activo" || data?.estado === "completado") {
+        setFirmadoExitoso(true);
+      }
     } catch (err) {
       console.error("Error al cargar el préstamo:", err);
     } finally {
@@ -42,7 +47,7 @@ export default function FirmaClientePage() {
     }
   };
 
-  // Configuración del Lienzo de Firma Táctil / Mouse
+  // Configuración del Lienzo de Firma
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -108,7 +113,7 @@ export default function FirmaClientePage() {
     alert("¡Firma capturada correctamente en el sistema!");
   };
 
- const handleEnviarContrato = async (e: React.FormEvent) => {
+  const handleEnviarContrato = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!firmaValida) {
       return alert("Por favor dibuje y valide su firma antes de continuar.");
@@ -119,7 +124,22 @@ export default function FirmaClientePage() {
 
     setEnviando(true);
     try {
-      // 1. Subir documento al bucket 'documentos'
+      // 1. VALIDACIÓN INTELIGENTE CON LA API DE IA ANTES DE GUARDAR
+      const aiFormData = new FormData();
+      aiFormData.append("documento", archivoDoc);
+
+      const aiResponse = await fetch("/api/verificar-documento", {
+        method: "POST",
+        body: aiFormData,
+      });
+
+      const aiResult = await aiResponse.json();
+
+      if (!aiResponse.ok || !aiResult.valido) {
+        throw new Error(aiResult.mensaje || "El sistema de IA ha rechazado el documento. Verifique que la foto sea clara y legible.");
+      }
+
+      // 2. Subir documento al bucket 'documentos' de Supabase[cite: 4]
       const fileExt = archivoDoc.name.split('.').pop();
       const fileName = `doc_${id}_${Date.now()}.${fileExt}`;
       const { error: uploadError } = await supabase.storage
@@ -128,21 +148,21 @@ export default function FirmaClientePage() {
 
       if (uploadError) throw uploadError;
 
-      // 2. Obtener URL pública del documento desde 'documentos'
+      // 3. Obtener URL pública del documento[cite: 4]
       const { data: publicUrlData } = supabase.storage
         .from("documentos")
         .getPublicUrl(fileName);
 
       const documentoUrl = publicUrlData.publicUrl;
 
-      // 3. Actualizar estado del préstamo en la base de datos
+      // 4. Actualizar estado del préstamo a activo/completado y bloquear el enlace[cite: 4]
       const { error: updateError } = await supabase
         .from("prestamos")
         .update({
           contrato_firmado: true,
           estado: "activo",
           documento_url: documentoUrl,
-          documento_tipo: "Cédula / Pasaporte"
+          documento_tipo: "Cédula / Pasaporte Verificado por IA"
         })
         .eq("id", id);
 
@@ -150,7 +170,7 @@ export default function FirmaClientePage() {
 
       setFirmadoExitoso(true);
     } catch (err: any) {
-      alert("Error al procesar el contrato: " + err.message);
+      alert("Seguridad GSTER LLC: " + err.message);
     } finally {
       setEnviando(false);
     }
@@ -159,7 +179,7 @@ export default function FirmaClientePage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#051c22] flex items-center justify-center text-white">
-        <p className="text-sm font-bold animate-pulse text-gster-amarillo">Cargando expediente seguro de GSTER LLC...</p>
+        <p className="text-sm font-bold animate-pulse text-amber-400">Cargando expediente seguro de GSTER LLC...</p>
       </div>
     );
   }
@@ -181,29 +201,33 @@ export default function FirmaClientePage() {
 
   return (
     <main className="min-h-screen bg-[#051c22] text-white py-10 px-4 flex flex-col items-center justify-center antialiased">
-      
       <div className="w-full max-w-lg bg-[#0b242b] border border-white/15 rounded-3xl p-8 shadow-2xl space-y-6">
         
-        {/* ENCABEZADO CON LOGO OFICIAL */}
+        {/* ENCABEZADO CON LOGO OFICIAL[cite: 4] */}
         <div className="text-center space-y-3 border-b border-white/10 pb-6">
           <img src="/assets/gster-logoblanco.svg" alt="GSTER LLC Logo" className="h-12 w-auto mx-auto object-contain pointer-events-none select-none" />
-          <p className="text-xs text-gster-amarillo font-bold uppercase tracking-wider">Plataforma de Validación y Firma Digital</p>
+          <p className="text-xs text-amber-400 font-bold uppercase tracking-wider">Plataforma de Validación y Firma Digital con IA</p>
         </div>
 
         {firmadoExitoso ? (
           <div className="text-center py-10 space-y-4">
             <CheckCircle2 className="w-16 h-16 text-emerald-400 mx-auto" />
-            <h3 className="text-2xl font-black">¡Contrato Firmado con Éxito!</h3>
-            <p className="text-xs text-slate-300">Su documento de identidad y firma digital han sido registrados y verificados de manera segura por GSTER LLC.</p>
+            <h3 className="text-2xl font-black">¡Proceso Completado!</h3>
+            <p className="text-xs text-slate-300 leading-relaxed">
+              Este enlace ya ha expirado. <strong>Ya firmaste este documento anteriormente</strong>. No se permite una nueva firma para este préstamo.
+            </p>
+            <div className="pt-4 border-t border-white/10 text-[11px] text-slate-400">
+              GSTER LLC • Seguridad Institucional
+            </div>
           </div>
         ) : (
           <form onSubmit={handleEnviarContrato} className="space-y-6">
             
-            {/* TARJETA DE DATOS REALES DEL PRÉSTAMO */}
+            {/* DATOS DEL PRÉSTAMO[cite: 4] */}
             <div className="bg-white/5 border border-white/10 rounded-2xl p-5 space-y-3 text-xs">
               <div className="flex justify-between border-b border-white/10 pb-2">
                 <span className="text-slate-400">Cliente:</span>
-                <span className="font-bold text-gster-amarillo">{prestamo.cliente}</span>
+                <span className="font-bold text-amber-400">{prestamo.cliente}</span>
               </div>
               <div className="flex justify-between border-b border-white/10 pb-2">
                 <span className="text-slate-400">Monto Aprobado:</span>
@@ -215,13 +239,21 @@ export default function FirmaClientePage() {
               </div>
             </div>
 
-            {/* LIENZO DE FIRMA TÁCTIL */}
+            {/* AVISO LEGAL DE PAGOS */}
+            <div className="p-3 rounded-xl bg-amber-400/10 border border-amber-400/20 text-amber-300 text-[11px] flex gap-2 items-start leading-relaxed">
+              <AlertCircle className="w-4 h-4 shrink-0 text-amber-400 mt-0.5" />
+              <span>
+                <strong>Aviso Importante:</strong> El cliente tiene la obligación de realizar los pagos a tiempo para evitar penalizaciones y recargos por mora según los términos de GSTER LLC.
+              </span>
+            </div>
+
+            {/* LIENZO DE FIRMA TÁCTIL[cite: 4] */}
             <div className="space-y-2">
-              <label className="block text-xs font-bold text-gster-amarillo uppercase tracking-wider">
-                Firme en el recuadro con su dedo o lápiz:
+              <label className="block text-xs font-bold text-amber-400 uppercase tracking-wider">
+                Firme en el recuadro con su dedo o lápiz[cite: 4]:
               </label>
               
-              <div className="bg-white rounded-2xl overflow-hidden border-2 border-gster-amarillo shadow-inner relative">
+              <div className="bg-white rounded-2xl overflow-hidden border-2 border-amber-400 shadow-inner relative">
                 <canvas
                   ref={canvasRef}
                   width={440}
@@ -232,7 +264,7 @@ export default function FirmaClientePage() {
                   onTouchStart={startDrawing}
                   onTouchEnd={stopDrawing}
                   onTouchMove={draw}
-                  className="w-full `h-45` cursor-crosshair touch-none bg-white"
+                  className="w-full h-[180px] cursor-crosshair touch-none bg-white"
                 />
               </div>
 
@@ -249,7 +281,7 @@ export default function FirmaClientePage() {
                   type="button"
                   onClick={validarFirma}
                   className={`px-4 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                    firmaValida ? 'bg-emerald-500 text-white' : 'bg-gster-amarillo text-gster-verde'
+                    firmaValida ? 'bg-emerald-500 text-white' : 'bg-amber-400 text-slate-950'
                   }`}
                 >
                   {firmaValida ? "Firma Validada ✓" : "Validar Firma"}
@@ -257,18 +289,18 @@ export default function FirmaClientePage() {
               </div>
             </div>
 
-            {/* CARGA DE CÉDULA / PASAPORTE */}
+            {/* CARGA DE CÉDULA / PASAPORTE CON VALIDACIÓN DE IA[cite: 4] */}
             <div className="space-y-2 pt-2">
-              <label className="block text-xs font-bold text-gster-amarillo uppercase tracking-wider">
-                Adjuntar Cédula o Pasaporte (Foto o PDF):
+              <label className="block text-xs font-bold text-amber-400 uppercase tracking-wider">
+                Adjuntar Cédula o Pasaporte (Foto o PDF)[cite: 4]:
               </label>
 
-              <label className="border-2 border-dashed border-white/20 hover:border-gster-amarillo rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer bg-white/5 transition-all text-center">
-                <Camera className="w-6 h-6 text-gster-amarillo mb-1" />
+              <label className="border-2 border-dashed border-white/25 hover:border-amber-400 rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer bg-white/5 transition-all text-center">
+                <Camera className="w-6 h-6 text-amber-400 mb-1" />
                 <span className="text-xs font-semibold text-white">
                   {archivoDoc ? archivoDoc.name : "Haga clic para subir o tomar foto de su documento"}
                 </span>
-                <span className="text-[10px] text-slate-400 mt-0.5">Formatos aceptados: JPG, PNG, PDF</span>
+                <span className="text-[10px] text-slate-400 mt-0.5">Validación automática por IA • JPG, PNG, PDF[cite: 4]</span>
                 <input
                   type="file"
                   accept="image/*,.pdf"
@@ -283,14 +315,14 @@ export default function FirmaClientePage() {
               </label>
             </div>
 
-            {/* BOTÓN FINAL DE ENVÍO */}
+            {/* BOTÓN FINAL DE ENVÍO[cite: 4] */}
             <button
               type="submit"
               disabled={enviando}
-              className="w-full py-4 rounded-2xl bg-gster-amarillo text-gster-verde font-black uppercase tracking-wider text-xs shadow-lg hover:bg-white transition-all cursor-pointer flex items-center justify-center gap-2"
+              className="w-full py-4 rounded-2xl bg-amber-400 text-slate-950 font-black uppercase tracking-wider text-xs shadow-lg hover:bg-white transition-all cursor-pointer flex items-center justify-center gap-2"
             >
               <ShieldCheck className="w-4 h-4" />
-              {enviando ? "Procesando firma..." : "Aceptar, Firmar y Enviar Contrato"}
+              {enviando ? "Analizando con IA y procesando..." : "Aceptar, Firmar y Enviar Contrato"}
             </button>
 
           </form>
