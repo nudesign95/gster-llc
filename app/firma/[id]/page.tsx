@@ -207,7 +207,7 @@ export default function FirmaClientePage() {
         {/* ENCABEZADO CON LOGO OFICIAL[cite: 4] */}
         <div className="text-center space-y-3 border-b border-white/10 pb-6">
           <img src="/assets/gster-logoblanco.svg" alt="GSTER LLC Logo" className="h-12 w-auto mx-auto object-contain pointer-events-none select-none" />
-          <p className="text-xs text-amber-400 font-bold uppercase tracking-wider">Plataforma de Validación y Firma Digital con IA</p>
+          <p className="text-xs text-amber-400 font-bold uppercase tracking-wider">Plataforma de Validación y Firma Digital</p>
         </div>
 
         {firmadoExitoso ? (
